@@ -3,17 +3,17 @@ package rest
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"time"
 
 	"github.com/Sora8d/bookstore_utils-go/rest_errors"
+	"github.com/Sora8d/heroku_bookstore_oauth_api/config"
 	"github.com/Sora8d/heroku_bookstore_oauth_api/domain/users"
 	rest "github.com/go-resty/resty/v2"
 )
 
 var (
 	usersRestClient *rest.Client = rest.New()
-	userServerUrl   string       = os.Getenv("UsersURI")
+	userServerUrl   string       = config.Config["UsersURI"]
 )
 
 func NewRepository() UsersRepository {
