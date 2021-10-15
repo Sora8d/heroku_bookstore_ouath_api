@@ -3,7 +3,7 @@ module github.com/Sora8d/heroku_bookstore_oauth_api
 go 1.17
 
 require (
-	github.com/Sora8d/bookstore_utils-go v0.0.0-20211013234621-28cd7d89d145
+	github.com/Sora8d/bookstore_utils-go v0.0.0-20211015171847-405f893a21d0
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-resty/resty/v2 v2.6.0
 	github.com/jackc/pgx/v4 v4.13.0

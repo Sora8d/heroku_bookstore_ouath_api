@@ -11,6 +11,7 @@ var (
 	check_access_token_only map[int]bool = map[int]bool{0: false, 1: true}
 	check_at_everything     map[int]bool = map[int]bool{0: true, 1: true}
 	grant_type_pass                      = "password"
+	grant_type_credentials               = "client_credentials"
 )
 
 type Repository interface {
@@ -54,15 +55,25 @@ func (s *service) Create(request access_token.AccessTokenRequest) (*access_token
 	if err := request.Validate(check_at_everything); err != nil {
 		return nil, err
 	}
-	//TODO: support both grant types: client credentials and password
+	var at access_token.AccessToken
 
-	//Athenticate the user against the Users API:
-	user, err := s.restUsersRepo.LoginUser(request.Username, request.Password)
-	if err != nil {
-		return nil, err
+	switch request.GrantType {
+	case grant_type_credentials:
+		permission, authErr := s.dbRepo.AuthSecret(request.ClientId, request.ClientSecret)
+		if authErr != nil {
+			return nil, authErr
+		}
+		at = access_token.GetNewAccessToken(0, permission.(bool))
+	case grant_type_pass:
+		//Athenticate the user against the Users API:
+		user, err := s.restUsersRepo.LoginUser(request.Username, request.Password)
+		if err != nil {
+			return nil, err
+		}
+		at = access_token.GetNewAccessToken(user.Id, false)
+	default:
+		return nil, rest_errors.NewBadRequestErr("Invalid grant_type")
 	}
-
-	at := access_token.GetNewAccessToken(user.Id)
 	at.Generate()
 
 	if err := s.dbRepo.Create(at); err != nil {
@@ -72,6 +83,7 @@ func (s *service) Create(request access_token.AccessTokenRequest) (*access_token
 	return &at, nil
 }
 
+//So at the end there is no Handler listening to this function, once i know better, in other apps this should be replaced with a refresh token.
 func (s *service) UpdateExpirationTime(at access_token.AccessToken) rest_errors.RestErr {
 	if err := at.Validate(check_at_everything); err != nil {
 		return err

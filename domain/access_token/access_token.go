@@ -20,13 +20,15 @@ type AccessToken struct {
 	AccessToken string `json:"access_token"`
 	UserId      int64  `json:"user_id"`
 	ClientId    int64  `json:"client_id,omitempty"`
+	Admin       bool   `json:"permissions"`
 	Expires     int64  `json:"expires"`
 }
 
-func GetNewAccessToken(userId int64) AccessToken {
+func GetNewAccessToken(userId int64, admin bool) AccessToken {
 	return AccessToken{
 		UserId:  userId,
 		Expires: time.Now().UTC().Add(expirationTime * time.Hour).Unix(),
+		Admin:   admin,
 	}
 }
 
@@ -85,7 +87,7 @@ type AccessTokenRequest struct {
 	Username string `json:"email"`
 	Password string `json:"password"`
 	// GrantType client_Credentials
-	ClientId     string `json:"client_id"`
+	ClientId     int64  `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
 }
 
