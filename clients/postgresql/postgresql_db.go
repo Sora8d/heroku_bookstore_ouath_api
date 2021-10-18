@@ -17,11 +17,8 @@ var current_client client
 
 func init() {
 	var err error
-	current_client.Conn, err = pgx.Connect(context.Background(), fmt.Sprintf("postgres://%s:%s@%s/%s",
-		config.Config["oauth_postgres_username"],
-		config.Config["oauth_postgres_password"],
-		config.Config["oauth_postgres_host"],
-		config.Config["oauth_postgres_schema"]))
+	current_client.Conn, err = pgx.Connect(context.Background(), fmt.Sprintf("postgres://%s",
+		config.Config["database"]))
 	if err != nil {
 		logger.Error("Error connecting to the database, shutting down the app", err)
 		panic(err)
