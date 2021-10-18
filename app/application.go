@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/Sora8d/heroku_bookstore_oauth_api/config"
 	"github.com/Sora8d/heroku_bookstore_oauth_api/controller"
 	"github.com/Sora8d/heroku_bookstore_oauth_api/repository/db"
 	"github.com/Sora8d/heroku_bookstore_oauth_api/repository/rest"
@@ -17,5 +18,5 @@ func StartApplication() {
 
 	router.GET("/oauth/access_token/:access_token_id", atHandler.GetByIdC)
 	router.POST("/oauth/access_token", atHandler.CreateC)
-	router.Run("localhost:8081")
+	router.Run(config.Config["address"])
 }
