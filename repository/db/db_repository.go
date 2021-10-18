@@ -77,7 +77,8 @@ func (dbr *dbRepository) AuthSecret(client_id int64, secret string) (interface{}
 	session := postgresql.GetSession().Conn
 	row := session.QueryRow(context.Background(), queryAuthenticateSecrets, client_id, secret)
 	var result bool
-	if err := row.Scan(&result); err != nil {
+	var unused_client_id int64
+	if err := row.Scan(&unused_client_id, &result); err != nil {
 		return nil, rest_errors.NewBadRequestErr("Bad Credentials")
 	}
 	return result, nil
