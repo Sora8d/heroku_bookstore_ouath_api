@@ -2,7 +2,6 @@ package postgresql
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Sora8d/bookstore_utils-go/logger"
 	"github.com/Sora8d/heroku_bookstore_oauth_api/config"
@@ -17,8 +16,7 @@ var current_client client
 
 func init() {
 	var err error
-	current_client.Conn, err = pgx.Connect(context.Background(), fmt.Sprintf("postgres://%s",
-		config.Config["database"]))
+	current_client.Conn, err = pgx.Connect(context.Background(), config.Config["database"])
 	if err != nil {
 		logger.Error("Error connecting to the database, shutting down the app", err)
 		panic(err)
