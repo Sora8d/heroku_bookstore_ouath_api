@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/Sora8d/heroku_bookstore_oauth_api/config"
 	"github.com/Sora8d/heroku_bookstore_oauth_api/controller"
 	"github.com/Sora8d/heroku_bookstore_oauth_api/repository/db"
@@ -11,6 +13,7 @@ import (
 )
 
 var router = gin.Default()
+var address = fmt.Sprintf("%s:%s", config.Config["address"], config.Config["port"])
 
 func StartApplication() {
 	atService := at_services.NewService(db.NewRepository(), rest.NewRepository())
@@ -18,5 +21,5 @@ func StartApplication() {
 
 	router.GET("/oauth/access_token/:access_token_id", atHandler.GetByIdC)
 	router.POST("/oauth/access_token", atHandler.CreateC)
-	router.Run(config.Config["address"])
+	router.Run(address)
 }
